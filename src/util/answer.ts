@@ -1,24 +1,19 @@
 import { Country } from "../lib/country";
-import { today } from "./dates";
 
 const countryData: Country[] = require("../data/country_data.json").features;
 
-countryData.sort((a, b) => {
-  return a.properties.FLAG[1].localeCompare(b.properties.FLAG[1]);
-});
+// Retrieve the seed from localStorage, fallback to "1234"
+const storedSeed = localStorage.getItem("globleSeed") || "1234";
+const seed = parseInt(storedSeed, 10);
 
-const shuffleAdjust = today < "2022-08-01" ? "5" : "6";
-
-function generateKeyNew(list: any[], day: string) {
-  const [year, month, date] = day.split("-");
-  const dayCode = Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(date));
-  const SHUFFLE_KEY = process.env.REACT_APP_SHUFFLE_KEY || "1";
-  const key =
-    Math.floor(dayCode / parseInt(SHUFFLE_KEY + shuffleAdjust)) % list.length;
-  return key;
+// Deterministic pseudo-random function using sine
+function seededRandom(seed: number, max: number) {
+  let x = Math.sin(seed) * 10000;
+  return Math.floor((x - Math.floor(x)) * max);
 }
 
-const key = generateKeyNew(countryData, today);
+// Get the index of the mystery country based on the seed
+const key = seededRandom(seed, countryData.length);
 
 export const answerCountry = countryData[key];
 export const answerName = answerCountry.properties.NAME;

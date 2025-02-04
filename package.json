@@ -2,6 +2,7 @@
   "name": "globle",
   "version": "1.6.0",
   "private": true,
+  "homepage": "https://jonathankoop.github.io/globle",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -30,7 +31,9 @@
     "eject": "react-scripts eject",
     "ts": "tsc -w",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "style-check": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch"
+    "style-check": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +58,7 @@
     "@types/d3-scale-chromatic": "^3.0.0",
     "@types/react-transition-group": "^4.4.4",
     "autoprefixer": "^10.4.2",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.4.5",
     "source-map-explorer": "^2.5.2",
     "tailwindcss": "^3.0.15"
