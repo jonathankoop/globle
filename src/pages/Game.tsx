@@ -70,23 +70,31 @@ export default function Game({ reSpin, setShowStats }: Props) {
       });
     }
     return [];
-    // eslint-disable-next-line
-  }, [practiceMode]);
+  }, [practiceMode, storedGuesses]);
 
-  // Check if win condition already met
   const alreadyWon = practiceMode
     ? false
     : storedCountries?.map((c) => c.properties.NAME).includes(answerName);
 
-  // Now we're ready to start the game! Set up the game states with the data we
-  // already know from the stored info.
+  // ** State updates **
   const [guesses, setGuesses] = useState<Country[]>(
     practiceMode ? [] : storedCountries
   );
   const [win, setWin] = useState(alreadyWon);
   const globeRef = useRef<GlobeMethods>(null!);
 
-  // Whenever there's a new guess
+  // Reset guesses when `reSpin` changes (new seed)
+  useEffect(() => {
+    if (reSpin) {
+      setGuesses([]);
+      setWin(false);
+      storeGuesses({
+        day: today,
+        countries: [],
+      });
+    }
+  }, [reSpin, storeGuesses]);
+
   useEffect(() => {
     if (!practiceMode) {
       const guessNames = guesses.map((country) => country.properties.NAME);
@@ -97,10 +105,8 @@ export default function Game({ reSpin, setShowStats }: Props) {
     }
   }, [guesses, storeGuesses, practiceMode]);
 
-  // When the player wins!
   useEffect(() => {
     if (win && storedStats.lastWin !== today && !practiceMode) {
-      // Store new stats in local storage
       const lastWin = today;
       const gamesWon = storedStats.gamesWon + 1;
       const streakBroken = dateDiffInDays(storedStats.lastWin, lastWin) > 1;
@@ -131,14 +137,10 @@ export default function Game({ reSpin, setShowStats }: Props) {
       };
       storeStats(newStats);
 
-      // Show stats
       setTimeout(() => setShowStats(true), 3000);
     }
   }, [win, guesses, setShowStats, storeStats, storedStats, practiceMode]);
 
-  // Practice mode
-
-  // Fallback while loading
   const renderLoader = () => (
     <p className="dark:text-gray-200">
       <FormattedMessage id="Loading" />
