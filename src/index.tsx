@@ -11,7 +11,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>
       <LocaleProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/globle">
           <App />
           <BodyStyle />
         </BrowserRouter>
