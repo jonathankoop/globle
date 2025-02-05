@@ -11,16 +11,14 @@ type Props = {
 export default function Header({ setReSpin, setShowStats }: Props) {
   const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
+  
   // Set up practice mode
   const [params] = useSearchParams();
   const practiceMode = !!params.get("practice_mode");
 
   function reRenderGlobe() {
     setReSpin(true);
-    if (practiceMode) {
-      return navigate("/");
-    }
-    navigate("/game");
+    navigate("/"); // Corrected to "/" so it respects BrowserRouter basename
   }
 
   const svgColour = theme.nightMode ? "rgb(209 213 219)" : "black";
